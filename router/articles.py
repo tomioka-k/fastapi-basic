@@ -1,14 +1,18 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from db.database import get_db
+from db import db_article
+from schemas import ArticleBase, ArticleDisplay
 
 router = APIRouter(
     prefix='/article',
     tags=['article']
 )
 
-@router.get('/all')
-def get_all_articles():
-    return {'message': f'All articles'}
+@router.post('/', response_model=ArticleDisplay)
+def create_article(request: ArticleBase, db: Session = Depends(get_db)):
+    return db_article.create_article(db, request)
 
-@router.get('/{id}')
-def get_article(id: int):
-    return {'message': f'Blog is {id}'}
+@router.get('/{id}', response_model=ArticleDisplay)
+def get_article(id: int, db: Session = Depends(get_db)):
+    return db_article.get_article(db, id)
