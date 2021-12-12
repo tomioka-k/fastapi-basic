@@ -1,6 +1,7 @@
 from sqlalchemy.orm.session import Session
 from schemas import ArticleBase
 from db.models import Article
+from fastapi import HTTPException, status
 
 def create_article(db: Session, request: ArticleBase):
     new_article = Article(
