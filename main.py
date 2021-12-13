@@ -1,5 +1,5 @@
 from typing import Optional, List
-from fastapi import FastAPI, Header, Response
+from fastapi import FastAPI, Header, Response, Cookie
 from router import articles, users, products
 from db import models
 from db.database import engine
@@ -20,5 +20,16 @@ def custom_header(
     ):
     response.headers['custom_response_header'] = ". ".join(custom_header)
     return f"{custom_header}"
+
+@app.get('/cookie')
+def save_cookie(response: Response):
+    response.set_cookie(key="sample_cookie", value="sample_cookie_value")
+    return "ok"
+
+@app.get('/cookie2')
+def get_cookie(sample_cookie: Optional[str] = Cookie(None)):
+    return {
+        "sample_cookie": sample_cookie
+    }
 
 models.Base.metadata.create_all(engine)
