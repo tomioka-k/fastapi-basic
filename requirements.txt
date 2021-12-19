@@ -5,3 +5,4 @@ pathlib
 sqlalchemy
 python-multipart
 python-jose
+aiofiles

@@ -1,16 +1,19 @@
 from typing import Optional, List
 from fastapi import FastAPI, Header, Response, Cookie
+from fastapi import staticfiles
 from fastapi.middleware.cors import CORSMiddleware
-from router import articles, users, products
+from router import articles, users, products, file
 from auth import authentication
 from db import models
 from db.database import engine
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 app.include_router(articles.router)
 app.include_router(users.router)
 app.include_router(products.router)
 app.include_router(authentication.router)
+app.include_router(file.router)
 
 @app.get('/hello')
 def index():
@@ -48,3 +51,5 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*']
 )
+
+app.mount('/files', StaticFiles(directory="files"), name='files')
