@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 from fastapi.exceptions import HTTPException
 from fastapi.responses import Response, HTMLResponse
-from sqlalchemy.util.langhelpers import set_creation_order
+import time
 
 router = APIRouter(
     prefix='/products',
@@ -10,8 +10,13 @@ router = APIRouter(
 
 products = ['water', 'cola', 'coffee']
 
+async def time_consuming_functionality(sec: int = 5):
+    time.sleep(sec)
+    return 'ok'
+
 @router.get('/all')
-def get_products_all():
+async def get_products_all():
+    await time_consuming_functionality()
     text_data = " ".join(products)
     return Response(content=text_data, media_type='text/plain', status_code=status.HTTP_200_OK)
 
